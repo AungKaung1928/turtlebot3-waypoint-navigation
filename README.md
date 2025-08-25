@@ -46,7 +46,7 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
-## Usage 🚀
+## Usage 👩‍🚀
 
 ### Quick Start
 ```bash
@@ -147,3 +147,4 @@ autonomous_navigator/
 │   └── waypoint_navigator.py        # Main navigation node
 └── setup.py                         # Package setup
 ```
+
