@@ -1,4 +1,4 @@
-# Nav2 Parameters for TurtleBot3 Autonomous Navigation
+# Nav2 Parameters for TurtleBot3 Autonomous Navigation Project
 # Fixed version with improved obstacle avoidance and recovery behaviors
 
 amcl:
