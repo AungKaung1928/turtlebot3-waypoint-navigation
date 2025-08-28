@@ -1,4 +1,4 @@
-# TurtleBot3 Autonomous Navigation 🤖
+# TurtleBot3 Autonomous Navigation 🤖🧭
 
 ROS2 autonomous navigation system for TurtleBot3 with waypoint navigation and obstacle avoidance.
 
@@ -147,4 +147,5 @@ autonomous_navigator/
 │   └── waypoint_navigator.py        # Main navigation node
 └── setup.py                         # Package setup
 ```
+
 
