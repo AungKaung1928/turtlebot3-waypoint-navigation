@@ -289,7 +289,7 @@ def main(args=None):
         if 'navigator' in locals():
             navigator.destroy_node()
         rclpy.shutdown()
-        print("Waypoint Navigator shut down successfully.")
+        print("Waypoint Navigator shut down successfully now.")
 
 if __name__ == '__main__':
     main()
