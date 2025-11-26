@@ -9,8 +9,6 @@ Launches everything needed for autonomous navigation:
 2. Nav2 navigation stack with SLAM
 3. Waypoint navigator node
 
-Author: Your Name
-License: MIT
 """
 
 import os
