@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 """
 Nav2 Navigation Launch File for TurtleBot3
-==========================================
-Launches the complete Nav2 navigation stack with SLAM and localization.
-This provides autonomous navigation capabilities with obstacle avoidance.
-Fixed version with behavior server for recovery behaviors.
+Launches Nav2 navigation stack with SLAM and localization
 """
 
 import os
@@ -17,20 +14,19 @@ from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    """Generate launch description for Nav2 navigation stack."""
     
-    # Get package directories
+    # Package directories
     nav2_bringup_dir = get_package_share_directory('nav2_bringup')
     turtlebot3_navigation2_dir = get_package_share_directory('turtlebot3_navigation2')
     autonomous_navigator_dir = get_package_share_directory('autonomous_navigator')
     
-    # Launch configuration variables
+    # Launch configurations
     use_sim_time = LaunchConfiguration('use_sim_time')
     slam = LaunchConfiguration('slam')
     map_yaml_file = LaunchConfiguration('map')
     params_file = LaunchConfiguration('params_file')
     
-    # Declare launch arguments
+    # Launch arguments
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
         default_value='true',
@@ -92,7 +88,7 @@ def generate_launch_description():
                    ('/tf_static', 'tf_static')]
     )
     
-    # RViz launch with custom config (optional - to avoid docking panel error)
+    # RViz with custom config
     rviz_config_file = os.path.join(autonomous_navigator_dir, 'rviz', 'navigation.rviz')
     
     rviz_launch = IncludeLaunchDescription(
@@ -114,6 +110,6 @@ def generate_launch_description():
         
         slam_launch,
         navigation_launch,
-        behavior_server,  # Add behavior server for recovery
+        behavior_server,
         rviz_launch,
     ])

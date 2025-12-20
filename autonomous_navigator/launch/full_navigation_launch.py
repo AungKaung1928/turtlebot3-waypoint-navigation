@@ -1,87 +1,73 @@
 #!/usr/bin/env python3
-
 """
-Complete Autonomous Navigation Launch File
-=========================================
-
-Launches everything needed for autonomous navigation:
-1. Gazebo simulation with TurtleBot3
-2. Nav2 navigation stack with SLAM
-3. Waypoint navigator node
-
-Author: Your Name
-License: MIT
+Full Navigation Launch - Single Command
+Replicates exact 3-terminal workflow
 """
-
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
+from launch.actions import (
+    IncludeLaunchDescription,
+    TimerAction,
+    ExecuteProcess,
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
-    """Generate complete launch description for autonomous navigation."""
     
-    # Get package directories
+    # Package directories
+    turtlebot3_gazebo_dir = get_package_share_directory('turtlebot3_gazebo')
+    turtlebot3_navigation2_dir = get_package_share_directory('turtlebot3_navigation2')
     autonomous_navigator_dir = get_package_share_directory('autonomous_navigator')
     
-    # Launch configuration variables
-    use_sim_time = LaunchConfiguration('use_sim_time')
+    # Configuration files
+    params_file = os.path.join(autonomous_navigator_dir, 'config', 'nav2_params.yaml')
     
-    # Declare launch arguments
-    declare_use_sim_time_cmd = DeclareLaunchArgument(
-        'use_sim_time',
-        default_value='true',
-        description='Use simulation (Gazebo) clock if true'
+    # 1. Launch Gazebo (Terminal 1 equivalent)
+    gazebo = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(turtlebot3_gazebo_dir, 'launch', 'turtlebot3_world.launch.py')
+        )
     )
     
-    # Gazebo world launch
-    gazebo_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            autonomous_navigator_dir,
-            '/launch/gazebo_world_launch.py'
-        ]),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
-        }.items()
-    )
-    
-    # Navigation launch (delayed to allow Gazebo to start)
-    navigation_launch = TimerAction(
-        period=5.0,
+    # 2. Launch TurtleBot3 Navigation2 with SLAM (Terminal 2 equivalent)
+    # 8 second delay for Gazebo to stabilize
+    navigation = TimerAction(
+        period=8.0,
         actions=[
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([
-                    autonomous_navigator_dir,
-                    '/launch/navigation_launch.py'
-                ]),
+                PythonLaunchDescriptionSource(
+                    os.path.join(turtlebot3_navigation2_dir, 'launch', 'navigation2.launch.py')
+                ),
                 launch_arguments={
-                    'use_sim_time': use_sim_time,
+                    'use_sim_time': 'True',
+                    'slam': 'True',
+                    'params_file': params_file,
                 }.items()
             )
         ]
     )
     
-    # Waypoint navigator (delayed to allow Nav2 to initialize)
-    waypoint_navigator_node = TimerAction(
-        period=15.0,
+    # 3. Launch Waypoint Navigator (Terminal 3 equivalent)
+    # 25 second delay to wait for "Managed nodes are active"
+    waypoint_navigator = TimerAction(
+        period=25.0,
         actions=[
             Node(
                 package='autonomous_navigator',
                 executable='waypoint_navigator',
                 name='waypoint_navigator',
                 output='screen',
-                parameters=[{'use_sim_time': use_sim_time}]
+                parameters=[{'use_sim_time': True}],
+                emulate_tty=True,
             )
         ]
     )
     
     return LaunchDescription([
-        declare_use_sim_time_cmd,
-        gazebo_launch,
-        navigation_launch,
-        waypoint_navigator_node,
+        gazebo,
+        navigation,
+        waypoint_navigator,
     ])

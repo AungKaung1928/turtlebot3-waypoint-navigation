@@ -12,10 +12,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        # Include launch files
         (os.path.join('share', package_name, 'launch'),
             glob('autonomous_navigator/launch/*launch.py')),
-        # Include config files
         (os.path.join('share', package_name, 'config'),
             glob('autonomous_navigator/config/*.yaml')),
         (os.path.join('share', package_name, 'config'),
