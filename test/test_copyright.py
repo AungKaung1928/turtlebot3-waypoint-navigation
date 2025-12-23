@@ -1,4 +1,4 @@
-# Copyright 2025 allkg
+# Copyright 2025 Aung Kaung Myat
 #
 # Licensed under the MIT License
 
