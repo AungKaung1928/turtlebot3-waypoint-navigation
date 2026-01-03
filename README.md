@@ -1,4 +1,4 @@
-# TurtleBot3 Autonomous Navigation - Infinite Loop
+# TurtleBot3 Autonomous Navigation
 
 ROS2 autonomous navigation system for TurtleBot3 with continuous waypoint navigation and obstacle avoidance.
 
@@ -204,3 +204,4 @@ Navigation is 3.6x faster than default TurtleBot3 settings:
 - Skips waypoint after 2 consecutive failures
 - Logs all attempts and successes
 - Never stops due to individual waypoint failures
+
