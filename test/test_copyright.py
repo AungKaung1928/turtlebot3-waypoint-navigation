@@ -1,4 +1,4 @@
-# Copyright 2025 Aung Kaung Myat
+# Copyright 2026 Aung Kaung Myat
 #
 # Licensed under the MIT License
 
