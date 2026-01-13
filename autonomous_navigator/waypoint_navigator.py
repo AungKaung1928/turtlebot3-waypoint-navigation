@@ -2,7 +2,7 @@
 """
 TurtleBot3 Waypoint Navigator using Nav2
 Sends navigation goals to Nav2 stack for autonomous waypoint navigation
-Continuous loop through waypoints
+Continuous loop through predefined waypoints
 """
 
 import rclpy
