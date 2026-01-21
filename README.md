@@ -44,7 +44,7 @@ Build the project:
 
     mkdir -p ~/turtlebot_navigation_ws/src
     cd ~/turtlebot_navigation_ws/src
-    # Place autonomous_navigator package here
+    git clone <repository_url>
     cd ~/turtlebot_navigation_ws
     colcon build --symlink-install
     source install/setup.bash
@@ -195,3 +195,4 @@ Navigation is 3.6x faster than default TurtleBot3 settings:
 - Skips waypoint after 2 consecutive failures
 - Logs all attempts and successes
 - Never stops due to individual waypoint failures
+
