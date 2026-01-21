@@ -25,64 +25,61 @@ This project implements autonomous navigation for TurtleBot3 in Gazebo simulatio
 
 ## Installation
 
+Clone the repository:
+
+    git clone https://github.com/AungKaung1928/turtlebot3-waypoint-navigation.git
+
 Install dependencies:
-```bash
-sudo apt update
-sudo apt install ros-humble-desktop ros-humble-turtlebot3* ros-humble-navigation2 ros-humble-nav2-bringup
-sudo apt install ros-humble-gazebo-* ros-humble-slam-toolbox
-```
+
+    sudo apt update
+    sudo apt install ros-humble-desktop ros-humble-turtlebot3* ros-humble-navigation2 ros-humble-nav2-bringup
+    sudo apt install ros-humble-gazebo-* ros-humble-slam-toolbox
 
 Set up environment:
-```bash
-echo "export TURTLEBOT3_MODEL=burger" >> ~/.bashrc
-source ~/.bashrc
-```
+
+    echo "export TURTLEBOT3_MODEL=burger" >> ~/.bashrc
+    source ~/.bashrc
 
 Build the project:
-```bash
-mkdir -p ~/turtlebot_navigation_ws/src
-cd ~/turtlebot_navigation_ws/src
-# Place autonomous_navigator package here
-cd ~/turtlebot_navigation_ws
-colcon build --symlink-install
-source install/setup.bash
-```
+
+    mkdir -p ~/turtlebot_navigation_ws/src
+    cd ~/turtlebot_navigation_ws/src
+    # Place autonomous_navigator package here
+    cd ~/turtlebot_navigation_ws
+    colcon build --symlink-install
+    source install/setup.bash
 
 ## Usage
 
 ### Quick Start (Single Command)
-```bash
-cd ~/turtlebot_navigation_ws
-source install/setup.bash
-export TURTLEBOT3_MODEL=burger
-ros2 launch autonomous_navigator full_navigation_launch.py
-```
+
+    cd ~/turtlebot_navigation_ws
+    source install/setup.bash
+    export TURTLEBOT3_MODEL=burger
+    ros2 launch autonomous_navigator full_navigation_launch.py
 
 The robot will start navigating through waypoints and **never stop** - it loops infinitely until you press Ctrl+C.
 
 ### Manual Launch (3 Terminals) - Alternative
 
 **Terminal 1 - Gazebo:**
-```bash
-export TURTLEBOT3_MODEL=burger
-ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
-```
+
+    export TURTLEBOT3_MODEL=burger
+    ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 
 **Terminal 2 - Navigation** (wait for Gazebo to load):
-```bash
-export TURTLEBOT3_MODEL=burger
-cd ~/turtlebot_navigation_ws
-source install/setup.bash
-ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True slam:=True
-```
+
+    export TURTLEBOT3_MODEL=burger
+    cd ~/turtlebot_navigation_ws
+    source install/setup.bash
+    ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True slam:=True
 
 **Terminal 3 - Waypoint Navigator** (wait for "Managed nodes are active"):
-```bash
-export TURTLEBOT3_MODEL=burger
-cd ~/turtlebot_navigation_ws
-source install/setup.bash
-ros2 run autonomous_navigator waypoint_navigator
-```
+
+    export TURTLEBOT3_MODEL=burger
+    cd ~/turtlebot_navigation_ws
+    source install/setup.bash
+    ros2 run autonomous_navigator waypoint_navigator
 
 ## Configuration
 
@@ -102,18 +99,17 @@ The robot navigates through 8 waypoints in TurtleBot3 World, continuously loopin
 After completing waypoint 8, the robot automatically returns to waypoint 1 and continues infinitely.
 
 Edit waypoints in `maps/waypoint_navigator.py`:
-```python
-self.waypoints = [
-    (2.0, 0.5, 0.0),      # (x, y, yaw in radians)
-    (2.0, -1.5, -1.57),
-    (0.5, -2.0, 3.14),
-    (-1.5, -1.5, 2.36),
-    (-2.0, 0.5, 1.57),
-    (-1.0, 2.0, 0.79),
-    (1.0, 2.0, 0.0),
-    (0.0, 0.0, 0.0),
-]
-```
+
+    self.waypoints = [
+        (2.0, 0.5, 0.0),      # (x, y, yaw in radians)
+        (2.0, -1.5, -1.57),
+        (0.5, -2.0, 3.14),
+        (-1.5, -1.5, 2.36),
+        (-2.0, 0.5, 1.57),
+        (-1.0, 2.0, 0.79),
+        (1.0, 2.0, 0.0),
+        (0.0, 0.0, 0.0),
+    ]
 
 ### Navigation Parameters
 
@@ -146,15 +142,13 @@ The robot handles failures gracefully by skipping problematic waypoints after 2 
 ## Troubleshooting
 
 **Robot not moving:**
-```bash
-ros2 node list  # Check all nodes running
-ros2 topic list | grep cmd_vel  # Check velocity commands
-```
+
+    ros2 node list  # Check all nodes running
+    ros2 topic list | grep cmd_vel  # Check velocity commands
 
 **Goals rejected:**
-```bash
-ros2 service call /local_costmap/clear_entirely_local_costmap nav2_msgs/srv/ClearEntireCostmap
-```
+
+    ros2 service call /local_costmap/clear_entirely_local_costmap nav2_msgs/srv/ClearEntireCostmap
 
 **First waypoints always fail:**
 - Normal behavior - waypoints 1-2 often rejected as "off costmap"
@@ -168,22 +162,19 @@ ros2 service call /local_costmap/clear_entirely_local_costmap nav2_msgs/srv/Clea
 - Decrease `BaseObstacle.scale` in nav2_params.yaml
 
 **Gazebo issues:**
-```bash
-killall gzserver gzclient
-```
+
+    killall gzserver gzclient
 
 ## Project Structure
 
-```
-autonomous_navigator/
-├── config/
-│   └── nav2_params.yaml          # Optimized navigation parameters (0.8 m/s)
-├── launch/
-│   └── full_navigation_launch.py # Complete system launcher
-├── maps/
-│   └── waypoint_navigator.py     # Main navigation node (infinite loop)
-└── setup.py                      # Package setup
-```
+    autonomous_navigator/
+    ├── config/
+    │   └── nav2_params.yaml          # Optimized navigation parameters (0.8 m/s)
+    ├── launch/
+    │   └── full_navigation_launch.py # Complete system launcher
+    ├── maps/
+    │   └── waypoint_navigator.py     # Main navigation node (infinite loop)
+    └── setup.py                      # Package setup
 
 ## Key Features Explained
 
@@ -204,4 +195,3 @@ Navigation is 3.6x faster than default TurtleBot3 settings:
 - Skips waypoint after 2 consecutive failures
 - Logs all attempts and successes
 - Never stops due to individual waypoint failures
-
