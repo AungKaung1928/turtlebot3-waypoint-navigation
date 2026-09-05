@@ -2,6 +2,8 @@
 
 ROS2 autonomous navigation system for TurtleBot3 with continuous waypoint navigation and obstacle avoidance.
 
+> **Simulator note (2026-09-05):** this project targets **Gazebo Classic 11** (`turtlebot3_gazebo`), which reached end-of-life in January 2025, and it is kept as-is rather than ported. For the same TurtleBot3 setup on **Gazebo Harmonic** (`ros_gz`), see [turtlebot3-wall-follower](https://github.com/AungKaung1928/turtlebot3-wall-follower).
+
 ## Overview
 
 This project implements autonomous navigation for TurtleBot3 in Gazebo simulation. The robot continuously loops through 8 predefined waypoints while avoiding obstacles using Nav2 stack and SLAM Toolbox.
