@@ -18,6 +18,10 @@ ros2 launch autonomous_navigator full_navigation_launch.py   # Gazebo + Nav2 + S
 
 A 3-terminal launch (Gazebo, Nav2, navigator separately) is in [docs/DETAILS.md](docs/DETAILS.md).
 
+![Waypoint loop: 8 points in the map frame, visited in order and looped](docs/route.svg)
+
+The loop as hard-coded in `autonomous_navigator/waypoint_navigator.py` (drawn by `scripts/plot_route.py`; CI fails if the figure and the code disagree). Not a recorded run.
+
 ## How it works
 
 - `autonomous_navigator/waypoint_navigator.py` sends the 8 waypoints (hard-coded in the node) to Nav2 in order and starts again at the first.
