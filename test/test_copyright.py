@@ -1,4 +1,4 @@
-# Copyright 2026 Aung Kaung Myat
+# Copyright 2026 The turtlebot3-waypoint-navigation authors
 #
 # Licensed under the MIT License
 
