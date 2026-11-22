@@ -27,3 +27,8 @@ jobs:
         run: |
           source install/setup.bash
           ros2 pkg prefix autonomous_navigator
+      - name: Launch test (node against a stand-in Nav2 action server)
+        run: |
+          source install/setup.bash
+          cd src/autonomous_navigator
+          launch_test test/test_launch_nav_goals.py
