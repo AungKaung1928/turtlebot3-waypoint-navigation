@@ -8,6 +8,7 @@ Continuous loop through predefined waypoints
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import PoseStamped
+from action_msgs.msg import GoalStatus
 from nav2_msgs.action import NavigateToPose
 from rclpy.action import ActionClient
 from nav2_msgs.srv import ClearEntireCostmap
@@ -203,9 +204,8 @@ class WaypointNavigator(Node):
 
     def get_result_callback(self, future):
         """Handle final navigation result"""
-        result = future.result().result
-        
-        if result:
+        # NavigateToPose.Result is a message, always truthy; the goal status says how it ended.
+        if future.result().status == GoalStatus.STATUS_SUCCEEDED:
             self.get_logger().info('✓ Navigation completed successfully!')
             self.navigation_complete = True
             self.failed_attempts = 0
