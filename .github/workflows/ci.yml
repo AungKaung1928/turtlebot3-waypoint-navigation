@@ -32,6 +32,7 @@ jobs:
           source install/setup.bash
           cd src/autonomous_navigator
           launch_test test/test_launch_nav_goals.py
+          launch_test test/test_launch_reject.py
       - name: Route figure matches the waypoints in the code
         run: |
           cd src/autonomous_navigator
