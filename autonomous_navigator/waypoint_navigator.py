@@ -81,11 +81,11 @@ class WaypointNavigator(Node):
             self.failed_attempts += 1
             
         if self.navigation_complete:
-            self.get_logger().info('Navigation to current waypoint completed!')
+            self.get_logger().info('Current waypoint finished (reached or failed)')
             
-            # Skip waypoint after multiple failures
+            # A failed waypoint is never retried (send_next_goal moves on); this only warns.
             if self.failed_attempts >= self.max_failed_attempts:
-                self.get_logger().warn(f'Skipping waypoint after {self.failed_attempts} failures')
+                self.get_logger().warn(f'{self.failed_attempts} waypoints failed in a row')
                 self.failed_attempts = 0
             
             time.sleep(2)
