@@ -81,5 +81,5 @@ class TestTimeout(unittest.TestCase):
             server.destroy()
             fake.destroy_node()
         self.assertEqual(len(arrived), 3, 'goal 3 never arrived')
-        self.assertTrue(goal2_done, 'goal 2 never finished')
-        self.assertGreater(arrived[2], goal2_done[0], 'goal 3 sent while goal 2 was still running')
+        self.assertTrue(goal2_done and arrived[2] > goal2_done[0],
+                        'goal 3 sent while goal 2 was still running')
