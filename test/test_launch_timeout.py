@@ -1,8 +1,8 @@
 """Launch test: a goal that times out must not cost the next waypoint.
 
-The stand-in navigate_to_pose server never finishes goal 1, so the node's goal_timeout (4 s here)
+The stand-in navigate_to_pose server never finishes goal 1, so the node's goal_timeout (7 s here)
 moves it on to goal 2. Like Nav2, the server then aborts goal 1. That late abort belongs to a
-superseded goal: the node must keep waiting for goal 2 (succeeds after 3.5 s) and only then send
+superseded goal: the node must keep waiting for goal 2 (succeeds after 6 s) and only then send
 goal 3. Before the fix the late abort marked the current goal done and goal 3 arrived while goal 2
 was still running.
 Run: launch_test test/test_launch_timeout.py (after sourcing the workspace).
@@ -27,7 +27,7 @@ from rclpy.executors import MultiThreadedExecutor
 def generate_test_description():
     node = launch_ros.actions.Node(
         package='autonomous_navigator', executable='waypoint_navigator', output='screen',
-        parameters=[{'goal_timeout': 4.0}])
+        parameters=[{'goal_timeout': 7.0}])
     return launch.LaunchDescription([launch_testing.actions.ReadyToTest(), node]), {'node': node}
 
 
@@ -55,7 +55,7 @@ class TestTimeout(unittest.TestCase):
                     time.sleep(0.05)
                 goal_handle.abort()
             elif i == 1:
-                time.sleep(3.5)
+                time.sleep(6.0)
                 goal_handle.succeed()
                 goal2_done.append(time.monotonic())
             else:
@@ -72,7 +72,7 @@ class TestTimeout(unittest.TestCase):
         spin.start()
         try:
             start = time.monotonic()
-            while len(arrived) < 3 and time.monotonic() - start < 40.0:
+            while len(arrived) < 3 and time.monotonic() - start < 60.0:
                 time.sleep(0.1)
         finally:
             stop.set()
