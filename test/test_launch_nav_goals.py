@@ -1,4 +1,5 @@
-"""Launch test: the installed waypoint_navigator against a stand-in Nav2 action server.
+"""
+Launch test: the installed waypoint_navigator against a stand-in Nav2 action server.
 
 The test process serves navigate_to_pose itself: goal 1 succeeds, goal 2 is aborted.
 It checks the goals arrive in waypoint order in the map frame, and that the node
@@ -11,9 +12,7 @@ import unittest
 
 import launch
 import launch_ros.actions
-import launch_testing
 import launch_testing.actions
-import launch_testing.asserts
 import pytest
 import rclpy
 from nav2_msgs.action import NavigateToPose

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Simple Goal Publisher for Nav2
+Simple Goal Publisher for Nav2.
+
 Sends single navigation goals for testing and manual waypoint navigation
 """
 
@@ -12,62 +13,62 @@ import math
 
 
 class GoalPublisher(Node):
-    """Simple goal publisher for testing Nav2 navigation"""
-    
+    """Simple goal publisher for testing Nav2 navigation."""
+
     def __init__(self):
         super().__init__('goal_publisher')
-        
+
         # Publisher for Nav2 goals
         self.goal_publisher = self.create_publisher(
             PoseStamped,
             '/goal_pose',
             10
         )
-        
+
         # Publish goals every 10 seconds
         self.timer = self.create_timer(10.0, self.publish_goal)
-        
+
         # Test goal coordinates (x, y, yaw)
         self.test_goals = [
             (2.0, 1.0, 0.0),
             (1.0, -1.0, 1.57),
             (0.0, 0.0, 0.0)
         ]
-        
+
         self.current_goal_index = 0
-        
+
         self.get_logger().info('Goal Publisher initialized')
 
     def publish_goal(self):
-        """Publish a test navigation goal"""
+        """Publish a test navigation goal."""
         if not self.test_goals:
             return
-            
+
         x, y, yaw = self.test_goals[self.current_goal_index]
-        
+
         goal = PoseStamped()
         goal.header.frame_id = 'map'
         goal.header.stamp = self.get_clock().now().to_msg()
-        
+
         goal.pose.position.x = x
         goal.pose.position.y = y
         goal.pose.position.z = 0.0
-        
+
         # Convert yaw to quaternion
         goal.pose.orientation.z = math.sin(yaw / 2.0)
         goal.pose.orientation.w = math.cos(yaw / 2.0)
-        
+
         self.goal_publisher.publish(goal)
-        
+
         self.get_logger().info(f'Published goal: x={x}, y={y}, yaw={yaw}')
-        
+
         # Cycle to next goal
         self.current_goal_index = (self.current_goal_index + 1) % len(self.test_goals)
 
 
 def main(args=None):
     rclpy.init(args=args)
-    
+
     try:
         publisher = GoalPublisher()
         rclpy.spin(publisher)

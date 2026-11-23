@@ -1,4 +1,5 @@
-"""Launch test: a goal that times out must not cost the next waypoint.
+"""
+Launch test: a goal that times out must not cost the next waypoint.
 
 The stand-in navigate_to_pose server never finishes goal 1, so the node's goal_timeout (7 s here)
 moves it on to goal 2. Like Nav2, the server then aborts goal 1. That late abort belongs to a
@@ -13,7 +14,6 @@ import unittest
 
 import launch
 import launch_ros.actions
-import launch_testing
 import launch_testing.actions
 import pytest
 import rclpy

@@ -1,27 +1,22 @@
-"""Launch test: rejected goals. The stand-in navigate_to_pose server rejects every goal; the node must
-count each as a failure and move on through the waypoints in order (no stall, no resend).
+"""
+Launch test: rejected goals.
 
-Setup as in test_launch_nav_goals.py:
-
-The test process serves navigate_to_pose itself: goal 1 succeeds, goal 2 is aborted.
-It checks the goals arrive in waypoint order in the map frame, and that the node
-reports the aborted goal as a failure.
-Run: launch_test test/test_launch_nav_goals.py (after sourcing the workspace).
+The test process serves navigate_to_pose itself and rejects every goal; the installed
+waypoint_navigator must count each as a failure and move on through the waypoints in order
+(no stall, no resend): the first three goals match self.waypoints and the node logs 'rejected'.
+Run: launch_test test/test_launch_reject.py (after sourcing the workspace).
 """
 import time
 import unittest
 
 import launch
 import launch_ros.actions
-import launch_testing
 import launch_testing.actions
-import launch_testing.asserts
 import pytest
 import rclpy
 from nav2_msgs.action import NavigateToPose
 from rclpy.action import ActionServer, GoalResponse
 from rclpy.executors import MultiThreadedExecutor
-
 
 
 @pytest.mark.launch_test
@@ -62,5 +57,6 @@ class TestNavGoals(unittest.TestCase):
             server.destroy()
             executor.shutdown()
             fake.destroy_node()
-        self.assertEqual(goals[:3], [(2.0, 0.5), (2.0, -1.5), (0.5, -2.0)])  # waypoint_navigator.py, self.waypoints
+        # first three of self.waypoints in waypoint_navigator.py
+        self.assertEqual(goals[:3], [(2.0, 0.5), (2.0, -1.5), (0.5, -2.0)])
         proc_output.assertWaitFor('rejected', process=node, timeout=5)
