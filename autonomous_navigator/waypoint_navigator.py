@@ -58,6 +58,7 @@ class WaypointNavigator(Node):
         self.last_goal_time = None
         self.goal_timeout = self.declare_parameter('goal_timeout', 60.0).value  # seconds
         self.loop_count = 0
+        self.goal_seq = 0  # numbers each sent goal; callbacks of older goals are ignored
         
         # Check navigation status every 3 seconds
         self.timer = self.create_timer(3.0, self.navigation_timer_callback)
@@ -161,13 +162,17 @@ class WaypointNavigator(Node):
             goal_msg, 
             feedback_callback=self.feedback_callback
         )
-        self._send_goal_future.add_done_callback(self.goal_response_callback)
+        self.goal_seq += 1
+        seq = self.goal_seq
+        self._send_goal_future.add_done_callback(lambda f: self.goal_response_callback(f, seq))
         
         # Advance to next waypoint
         self.current_waypoint_index += 1
 
-    def goal_response_callback(self, future):
+    def goal_response_callback(self, future, seq):
         """Handle goal response from Nav2"""
+        if seq != self.goal_seq:
+            return  # superseded after a timeout
         goal_handle = future.result()
         
         if not goal_handle.accepted:
@@ -180,7 +185,7 @@ class WaypointNavigator(Node):
         
         # Get result when navigation completes
         self._get_result_future = goal_handle.get_result_async()
-        self._get_result_future.add_done_callback(self.get_result_callback)
+        self._get_result_future.add_done_callback(lambda f: self.get_result_callback(f, seq))
 
     def feedback_callback(self, feedback_msg):
         """Handle navigation feedback from Nav2"""
@@ -202,8 +207,12 @@ class WaypointNavigator(Node):
                 f'y={current_pose.position.y:.2f}'
             )
 
-    def get_result_callback(self, future):
+    def get_result_callback(self, future, seq):
         """Handle final navigation result"""
+        if seq != self.goal_seq:
+            # A timed-out goal ending late (Nav2 aborts it when the next goal preempts it)
+            # must not mark the current goal done.
+            return
         # NavigateToPose.Result is a message, always truthy; the goal status says how it ended.
         if future.result().status == GoalStatus.STATUS_SUCCEEDED:
             self.get_logger().info('✓ Navigation completed successfully!')
