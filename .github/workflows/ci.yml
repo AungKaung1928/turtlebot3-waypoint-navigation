@@ -40,3 +40,9 @@ jobs:
           cd src/autonomous_navigator
           python3 scripts/plot_route.py
           git diff --exit-code docs/route.svg
+      - name: Lint (ament flake8 + pep257 tests shipped in test/)
+        run: |
+          source install/setup.bash
+          cd src/autonomous_navigator
+          # test_copyright.py is not run: the sources carry no copyright headers (license: LICENSE).
+          python3 -m pytest test/test_flake8.py test/test_pep257.py -v
