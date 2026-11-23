@@ -10,7 +10,7 @@ Requires Ubuntu 22.04, ROS 2 Humble and Gazebo Classic 11 (`sudo apt install ros
 
 ```bash
 mkdir -p ~/turtlebot_navigation_ws/src && cd ~/turtlebot_navigation_ws/src
-git clone <this repo URL>
+git clone https://github.com/AungKaung1928/turtlebot3-waypoint-navigation.git
 cd .. && colcon build --symlink-install && source install/setup.bash
 export TURTLEBOT3_MODEL=burger
 ros2 launch autonomous_navigator full_navigation_launch.py   # Gazebo + Nav2 + SLAM + navigator; Ctrl+C stops the loop
