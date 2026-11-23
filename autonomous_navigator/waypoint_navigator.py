@@ -56,7 +56,7 @@ class WaypointNavigator(Node):
         self.failed_attempts = 0
         self.max_failed_attempts = 2
         self.last_goal_time = None
-        self.goal_timeout = 60.0
+        self.goal_timeout = self.declare_parameter('goal_timeout', 60.0).value  # seconds
         self.loop_count = 0
         
         # Check navigation status every 3 seconds

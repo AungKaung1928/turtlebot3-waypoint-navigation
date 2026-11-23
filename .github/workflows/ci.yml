@@ -34,6 +34,7 @@ jobs:
           cd src/autonomous_navigator
           launch_test test/test_launch_nav_goals.py
           launch_test test/test_launch_reject.py
+          launch_test test/test_launch_timeout.py
       - name: Route figure matches the waypoints in the code
         run: |
           cd src/autonomous_navigator
